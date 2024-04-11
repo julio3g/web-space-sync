@@ -1,10 +1,9 @@
 'use client'
 
+import { DateTimePicker } from '@/components/date-time-picker'
 // import { DateTimePicker } from '@/components/date-time-picker/date-time-picker'
 import MultipleSelector, { Option } from '@/components/multi-select'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Card } from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -15,22 +14,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
-import { cn } from '@/lib/utils'
 import { transformBytesInKb } from '@/utils/transformerFile'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
-import {
-  CalendarIcon,
-  CloudUpload,
-  Image as ImageLucide,
-  Trash2,
-} from 'lucide-react'
+import { CloudUpload, Image as ImageLucide, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-hook-form'
@@ -142,7 +129,7 @@ export default function SendMessage() {
   return (
     <main className="max-w-screen-lg m-auto">
       <h1 className="text-3xl text-slate-950 ">Criar novo envio</h1>
-      <Card className="max-w-screen-md w-full p-6 m-auto">
+      <div className="max-w-screen-md w-full p-6 m-auto">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -187,7 +174,7 @@ export default function SendMessage() {
                     audiência está mais ativa, ou selecione manualmente uma data
                     e hora futura para enviar sua mensagem.
                   </FormDescription>
-                  <Popover>
+                  {/* <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
@@ -214,7 +201,12 @@ export default function SendMessage() {
                         initialFocus
                       />
                     </PopoverContent>
-                  </Popover>
+                  </Popover> */}
+                  <DateTimePicker
+                    granularity="second"
+                    jsDate={field.value}
+                    onJsDateChange={field.onChange}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -312,7 +304,7 @@ export default function SendMessage() {
             </Button>
           </form>
         </Form>
-      </Card>
+      </div>
     </main>
   )
 }
