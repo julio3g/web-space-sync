@@ -1,6 +1,6 @@
 'use client'
 
-import { DateTimePicker } from '@/components/date-time-picker'
+import { DateTimePicker } from '@/components/datetime-picker'
 // import { DateTimePicker } from '@/components/date-time-picker/date-time-picker'
 import MultipleSelector, { Option } from '@/components/multi-select'
 import { Button } from '@/components/ui/button'
@@ -62,12 +62,16 @@ export type createAndSendMessageFormData = z.infer<
 export default function SendMessage() {
   const [uploadQueue, setUploadQueue] = useState<File[]>([])
 
+  const setDatetime = new Date()
+  setDatetime.setMinutes(setDatetime.getMinutes() + 30)
+  setDatetime.setSeconds(0)
+
   const form = useForm<createAndSendMessageFormData>({
     resolver: zodResolver(createAndSendMessageSchema),
     defaultValues: {
       name: '',
       city: [],
-      datetime: new Date(),
+      datetime: setDatetime,
       copywriter: '',
       attachments: [],
     },
@@ -78,7 +82,7 @@ export default function SendMessage() {
     noClick: true,
     noKeyboard: true,
     accept: {
-      'image/*': ['.jpg', '.jpeg', '.png'],
+      'image/*': [],
     },
     onDrop: handleStartUpload,
     maxSize: 1024 * 1024 * 50,
@@ -169,40 +173,12 @@ export default function SendMessage() {
                 <FormItem>
                   <FormLabel>Opções de agendamento</FormLabel>
                   <FormDescription>
-                    {' '}
                     Agende seu envio de mensagem para os momentos em que sua
                     audiência está mais ativa, ou selecione manualmente uma data
                     e hora futura para enviar sua mensagem.
                   </FormDescription>
-                  {/* <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn(
-                            'w-[240px] pl-3 text-left',
-                            !field.value && 'text-muted-foreground',
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, 'PPP')
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover> */}
                   <DateTimePicker
+                    aria-label="Select a date"
                     granularity="second"
                     jsDate={field.value}
                     onJsDateChange={field.onChange}
@@ -221,6 +197,7 @@ export default function SendMessage() {
                   </FormLabel>
                   <FormControl>
                     <Textarea
+                      autoComplete="off"
                       placeholder="Digite aqui..."
                       className="resize-none h-32"
                       {...field}
@@ -234,69 +211,66 @@ export default function SendMessage() {
               control={form.control}
               name="attachments"
               render={() => (
-                <FormField
-                  control={form.control}
-                  name="attachments"
-                  render={() => (
+                <FormItem>
+                  <>
                     <>
-                      <>
-                        <label
-                          htmlFor="files"
-                          className="flex h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed bg-slate-50 p-4 text-sm text-slate-600 hover:bg-slate-100 data-[drag-active=true]:border-primary data-[drag-active=true]:bg-primary dark:bg-slate-900 dark:text-slate-400"
-                          data-drag-active={isDragActive}
-                          {...getRootProps()}
-                        >
-                          <div className="p-2.5 rounded-full bg-slate-200">
-                            <CloudUpload className="h-5 w-5" />
-                          </div>
-                          <div className="flex flex-col gap-1 text-center">
-                            <span className="font-normal text-sm">
-                              <b>Clique para fazer upload</b> ou arraste e solte
-                            </span>
-                            <span className="text-xs text-slate-400 font-normal">
-                              Tamanho máximo do arquivo 50 MB.
-                            </span>
-                          </div>
-                        </label>
-                        <input
-                          type="file"
-                          id="files"
-                          multiple
-                          {...getInputProps()}
-                        />
-                      </>
-                      <div className="space-y-3">
-                        {uploadQueue.map((file) => (
-                          <div
-                            key={file.name}
-                            className="border rounded-lg flex justify-between gap-3 p-3"
-                          >
-                            <div className="flex gap-3">
-                              <div className="p-2 rounded-full bg-slate-200">
-                                <ImageLucide />
-                              </div>
-                              <div>
-                                <p className="text-sm text-slate-950 font-medium">
-                                  {file.name}
-                                </p>
-                                <p className="text-[10px] text-slate-500">
-                                  {transformBytesInKb(file.size)} KB
-                                </p>
-                              </div>
-                            </div>
-                            <Button
-                              variant={'ghost'}
-                              className="p-2"
-                              onClick={() => removeFileOnUploadQueue(file)}
-                            >
-                              <Trash2 size={20} className="stroke-red-400" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
+                      <label
+                        htmlFor="files"
+                        className="flex h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed bg-slate-50 p-4 text-sm text-slate-600 hover:bg-slate-100 data-[drag-active=true]:border-primary data-[drag-active=true]:bg-primary dark:bg-slate-900 dark:text-slate-400"
+                        data-drag-active={isDragActive}
+                        {...getRootProps()}
+                      >
+                        <div className="p-2.5 rounded-full bg-slate-200">
+                          <CloudUpload className="h-5 w-5" />
+                        </div>
+                        <div className="flex flex-col gap-1 text-center">
+                          <span className="font-normal text-sm">
+                            <b>Clique para fazer upload</b> ou arraste e solte
+                          </span>
+                          <span className="text-xs text-slate-400 font-normal">
+                            Tamanho máximo do arquivo 50 MB.
+                          </span>
+                        </div>
+                      </label>
+                      <input
+                        type="file"
+                        id="files"
+                        multiple
+                        {...getInputProps()}
+                      />
                     </>
-                  )}
-                />
+                    <div className="space-y-3">
+                      {uploadQueue.map((file) => (
+                        <div
+                          key={file.name}
+                          className="border rounded-lg flex justify-between gap-3 p-3"
+                        >
+                          <div className="flex gap-3">
+                            <div className="p-2 rounded-full bg-slate-200">
+                              <ImageLucide />
+                            </div>
+                            <div>
+                              <p className="text-sm text-slate-950 font-medium">
+                                {file.name}
+                              </p>
+                              <p className="text-[10px] text-slate-500">
+                                {transformBytesInKb(file.size)} KB
+                              </p>
+                            </div>
+                          </div>
+                          <Button
+                            variant={'ghost'}
+                            className="p-2"
+                            onClick={() => removeFileOnUploadQueue(file)}
+                          >
+                            <Trash2 size={20} className="stroke-red-400" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                  <FormMessage />
+                </FormItem>
               )}
             />
             <Button type="submit" className="w-full">

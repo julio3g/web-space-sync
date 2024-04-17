@@ -8,9 +8,6 @@ dependencies:
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.51.1)
-  '@internationalized/date':
-    specifier: ^3.5.2
-    version: 3.5.2
   '@radix-ui/react-dialog':
     specifier: ^1.0.5
     version: 1.0.5(@types/react-dom@18.2.22)(@types/react@18.2.67)(react-dom@18.2.0)(react@18.2.0)
@@ -32,9 +29,6 @@ dependencies:
   '@radix-ui/react-slot':
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.2.67)(react@18.2.0)
-  '@react-stately/datepicker':
-    specifier: ^3.9.2
-    version: 3.9.2(react@18.2.0)
   axios:
     specifier: ^1.6.8
     version: 1.6.8
